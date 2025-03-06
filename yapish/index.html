@@ -5,26 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Classroom</title>
     <script>
-        // Base64 encode function (no reversal of the string)
         function rizz(input) {
-            return btoa(input); // Base64 encode the string directly
+            return btoa(input);
         }
 
-        // Base64 encoded URL (hidden obfuscation)
         var haha = "aHR0cHM6Ly9saW5nb2phbS5jb20vZW1iZWQveWFwaXNoc3BlYWs=";
 
-        // Prompt user for the magic word
         var answer = prompt("What's the magic word?");
         
-        // Correct password ("please" Base64 encoded)
-        var correctPassword = "cGxlYXNl"; // "please" Base64 encoded
+        var correctPassword = "cGxlYXNl";
 
-        // Check if the password is correct
         if (rizz(answer) === correctPassword) {
-            // Decode the Base64 URL after correct password
             var bruh = atob(haha);
             
-            // Write the HTML content dynamically
             document.write(`
                 <!DOCTYPE html>
                 <html lang="en">
@@ -53,7 +46,6 @@
                 </html>
             `);
         } else {
-            // If the password is wrong, show an alert and redirect to YouTube
             alert("Wrong!");
             document.write('<meta http-equiv="refresh" content="0; URL=\'https://www.youtube.com/watch?v=xvFZjo5PgG0\'">');
         }
