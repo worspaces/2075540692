@@ -63,21 +63,20 @@
 
   <script>
     function rizz(input) {
-      return btoa(input.split("").reverse().join("")); // Reverse the string and encode in base64
+      return btoa(input.split("").reverse().join(""));
     }
 
-    var haha = "aHR0cHM6Ly9saW5nb2phbS5jb20vZW1iZWQvMjA3NTU0MDY5Mg=="; // Encoded URL
-    var problem = "b3RpbQ=="; // Encoded string to check against
+    var haha = "aHR0cHM6Ly9saW5nb2phbS5jb20vZW1iZWQvMjA3NTU0MDY5Mg==";
+    var problem = "b3RpbQ==";
 
     var answer = prompt("What do you say to someone who is annoying?");
 
     if (answer === null) {
-      alert("You canceled the prompt.");
-      // Leave the page as is.
+      alert("Don't know what it is? Well too bad! Come and look at the other pages connected to this page instead.");
+      
     } else if (rizz(answer) === problem) {
-      var bruh = atob(haha); // Decode the URL
+      var bruh = atob(haha);
 
-      // Create a new HTML document that will fill the entire viewport with the iframe
       var newHTML = `
         <!DOCTYPE html>
         <html lang="en">
