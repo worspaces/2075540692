@@ -1,56 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Classroom</title>
-    <script>
-        function rizz(input) {
-            return btoa(input.split("").reverse().join(""));
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Classroom</title>
 
-        var haha = "aHR0cHM6Ly9saW5nb2phbS5jb20vZW1iZWQvMjA3NTU0MDY5Mg==";
+  <!-- Google AdSense Script -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9773017729831801" crossorigin="anonymous"></script>
 
-        var answer = prompt("What do you say to someone who is annoying?");
-        var problem = "b3RpbQ==";
+  <style>
+    /* Main page styles */
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      min-height: 100vh;
+      width: 100%;
+      margin: 0;
+      background-color: black;
+      position: relative;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .motw-text {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #55CC25;
+      text-shadow: 0 0 2px #55CC25, 0 0 4px #55CC25;
+      margin-top: 20px;
+      text-align: center;
+    }
+    .link-text a {
+      color: #55CC25;
+      font-size: 3rem;
+      font-weight: bold;
+      text-decoration: underline;
+      text-shadow: 0 0 10px #55CC25, 0 0 2px #55CC25;
+      text-align: center;
+    }
+    .spacer {
+      height: 100px;
+    }
+    .copyright-text {
+      font-size: 1.2rem;
+      margin-top: 50px;
+    }
+    /* Custom Scrollbar Styles */
+    ::-webkit-scrollbar { width: 12px; height: 12px; }
+    ::-webkit-scrollbar-track { background-color: black; }
+    ::-webkit-scrollbar-thumb {
+      background-color: #55CC25;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #55CC25, 0 0 20px #55CC25;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #55CC25;
+      box-shadow: 0 0 15px #55CC25, 0 0 25px #55CC25;
+    }
+    * { scrollbar-width: thin; scrollbar-color: #55CC25 black; }
+  </style>
 
-        if (rizz(answer) === problem) {
-            var bruh = atob(haha);
-            document.write(`
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Classroom</title>
-                    <style>
-                        html, body {
-                            margin: 0;
-                            padding: 0;
-                            height: 100%;
-                            overflow: hidden;
-                        }
-                        iframe {
-                            width: 100%;
-                            height: 100%;
-                            border: none;
-                            filter: invert(0.94) brightness(1.1);
-                            iframe {
-}
-                        }
-                    </style>
-                </head>
-                <body>
-                    <iframe src="${bruh}" allowfullscreen></iframe>
-                </body>
-                </html>
-            `);
-        } else {
-            alert("Wrong!");
-            document.write('<meta http-equiv="refresh" content="0; URL=\'https://www.youtube.com/watch?v=xvFZjo5PgG0\'">');
-        }
-    </script>
+  <script>
+    function rizz(input) {
+      return btoa(input.split("").reverse().join("")); // Reverse the string and encode in base64
+    }
+
+    var haha = "aHR0cHM6Ly9saW5nb2phbS5jb20vZW1iZWQvMjA3NTU0MDY5Mg=="; // Encoded URL
+    var problem = "b3RpbQ=="; // Encoded string to check against
+
+    var answer = prompt("What do you say to someone who is annoying?");
+
+    if (answer === null) {
+      alert("You canceled the prompt.");
+      // Leave the page as is.
+    } else if (rizz(answer) === problem) {
+      var bruh = atob(haha); // Decode the URL
+
+      // Create a new HTML document that will fill the entire viewport with the iframe
+      var newHTML = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Classroom</title>
+          <style>
+            html, body {
+              margin: 0;
+              padding: 0;
+              width: 100%;
+              height: 100%;
+              overflow: hidden;
+            }
+            iframe {
+              display: block;
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              border: none;
+              filter: invert(0.94) brightness(1.1);
+            }
+          </style>
+        </head>
+        <body>
+          <iframe src="${bruh}" allowfullscreen></iframe>
+        </body>
+        </html>
+      `;
+      document.open();
+      document.write(newHTML);
+      document.close();
+    } else {
+      alert("Wrong!");
+      document.write('<meta http-equiv="refresh" content="0; URL=\'https://www.youtube.com/watch?v=xvFZjo5PgG0\'">');
+    }
+  </script>
 </head>
 <body>
+  <p class="motw-text">Pages:</p>
+  <p class="link-text"><a href="https://chesao.lol/yapish/">/yapish</a></p>
+  <p class="link-text"><a href="https://chesao.lol/updates/">/updates</a></p>
+  <div class="spacer"></div>
+  <p class="copyright-text">
+    2025 © Copyright 
+    <a href="https://chesao.lol/" style="color: #55CC25; text-decoration: underline;">https://chesao.lol/</a>, 
+    language made by Asher, and maintained by 
+    <a href="mailto:studentaccbro@gmail.com" style="color: #55CC25; text-decoration: underline;">Wilbur</a>.
+  </p>
 </body>
 </html>
