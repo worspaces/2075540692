@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+This<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -40,6 +40,18 @@
     }
     .spacer { height: 100px; }
     .copyright-text { font-size: 1.2rem; margin-top: 50px; }
+    .alternative-text {
+      margin-top: 15px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #55CC25;
+      text-shadow: 0 0 5px #55CC25, 0 0 10px #55CC25;
+      text-align: center;
+    }
+    .alternative-text a {
+      color: #55CC25;
+      text-decoration: underline;
+    }
     ::-webkit-scrollbar { width: 12px; height: 12px; }
     ::-webkit-scrollbar-track { background-color: black; }
     ::-webkit-scrollbar-thumb {
@@ -89,6 +101,10 @@
     </form>
   </div>
 
+  <div class="alternative-text">
+    Having trouble? Go to this <a href="https://o.chesao.lol/">alternative</a>
+  </div>
+
   <div class="spacer"></div>
   <p class="copyright-text">
     2025 © Copyright 
@@ -114,7 +130,7 @@
           if (result.redirect) window.location.href = result.redirect;
         }
       } catch (error) {
-        alert('Error connecting to the server.');
+        alert('This version of the authenticator is down right now, use the alternative please.');
       }
     });
   </script>
