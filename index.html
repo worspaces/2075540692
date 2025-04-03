@@ -94,7 +94,7 @@
   <p class="link-text"><a href="https://chesao.lol/credits/">/credits - Who Helped?</a></p>
 
   <div class="form-container">
-    <form id="answerForm" action="https://chesao-worker.stilla-rrms-wlwv-k12-or-us.workers.dev/verify" method="POST">
+    <form id="answerForm">
       <label for="answer" class="motw-text">What do you say to someone who is annoying?</label><br>
       <input type="text" id="answer" name="answer" required>
       <button type="submit">Submit</button>
@@ -116,18 +116,23 @@
   <script>
     document.getElementById('answerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const formData = new FormData(e.target);
+      
+      const answer = document.getElementById('answer').value;
+      const data = JSON.stringify({ answer });
+
       try {
         const response = await fetch('https://chesao-worker.stilla-rrms-wlwv-k12-or-us.workers.dev/verify', {
           method: 'POST',
-          body: formData
+          headers: { "Content-Type": "application/json" },
+          body: data
         });
+
         const result = await response.json();
+        
         if (result.success) {
-          window.location.href = result.redirect;
+          alert("Correct! Password: " + result.password);
         } else {
           alert(result.message);
-          if (result.redirect) window.location.href = result.redirect;
         }
       } catch (error) {
         alert('This version of the authenticator is down right now, use the alternative please.');
