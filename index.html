@@ -72,15 +72,14 @@
         });
 
         const result = await response.json();
-        console.log(result); // Debugging
 
         if (result.success && result.redirect) {
           window.location.href = result.redirect;
         } else {
-          alert(result.message || 'Incorrect answer.');
+          alert(result.message || 'Wrong!');
         }
       } catch (error) {
-        alert('Server error. Try again later.');
+        alert('Server error. Try again later (Takes about 1-2 days to fix).');
       }
     });
   </script>
