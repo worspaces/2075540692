@@ -101,7 +101,7 @@
         overlay.style.fontWeight = 'bold';
         overlay.style.fontSize = '1.5rem';
         overlay.style.zIndex = 9999;
-        overlay.textContent = "You have entered the correct password, and it shall not be shown again!";
+        overlay.textContent = "Refresh the page!";
 
         document.body.appendChild(overlay);
 
@@ -142,7 +142,7 @@
           } else {
             alert("Popup blocked.");
           }
-        }, 2000); // Delay so the user can see the message
+        }, 0);
       } else {
         alert(result.message || 'Wrong!');
       }
