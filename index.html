@@ -64,11 +64,11 @@
   <p class="motw-text"><a href="https://yay.chesao.lol/" target="_blank">dont click me</a></p>
   <p class="motw-text">What do you say when you need help?</p>
   <div class="form-container">
-    <form id="answerForm">
-      <input type="text" id="answer" name="answer" required>
-      <button type="submit">Submit</button>
-    </form>
-  </div>
+  <form id="answerForm" autocomplete="off">
+    <input type="text" id="answer" name="answer" required autocomplete="off">
+    <button type="submit">Submit</button>
+  </form>
+</div>
 
 <script>
   document.getElementById('answerForm').addEventListener('submit', async (e) => {
