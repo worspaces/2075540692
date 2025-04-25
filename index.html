@@ -70,31 +70,65 @@
     </form>
   </div>
 
-  <script>
-    document.getElementById('answerForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const answer = document.getElementById('answer').value;
-      const data = JSON.stringify({ answer });
-      
-      try {
-        const response = await fetch('https://chesao-worker.stilla-rrms-wlwv-k12-or-us.workers.dev/verify', {
-          method: 'POST',
-          headers: { "Content-Type": "application/json" },
-          body: data
-        });
+<script>
+  document.getElementById('answerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const answer = document.getElementById('answer').value;
+    const data = JSON.stringify({ answer });
 
-        const result = await response.json();
+    try {
+      const response = await fetch('https://chesao-worker.stilla-rrms-wlwv-k12-or-us.workers.dev/verify', {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: data
+      });
 
-        if (result.success && result.redirect) {
-          window.location.href = result.redirect;
+      const result = await response.json();
+
+      if (result.success && result.redirect) {
+        const newTab = window.open('about:blank', '_blank');
+        if (newTab) {
+          newTab.document.write(`
+            <html>
+              <head>
+              <title>‎ </title>
+                <style>
+                  html, body {
+                    margin: 0;
+                    padding: 0;
+                    height: 100%;
+                    overflow: hidden;
+                  }
+                  iframe {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    border: none;
+                  }
+                </style>
+              </head>
+              <body>
+                <iframe src="${result.redirect}" allowfullscreen></iframe>
+              </body>
+            </html>
+          `);
+          newTab.document.close();
+          setTimeout(() => {
+            window.close();
+          }, 500);
         } else {
-          alert(result.message || 'Wrong!');
+          alert("Popup blocked.");
         }
-      } catch (error) {
-        alert('Server error. Try again later (Takes about 1-2 days to fix).');
+      } else {
+        alert(result.message || 'Wrong!');
       }
-    });
-  </script>
+    } catch (error) {
+      alert('Server error. Try again later (Takes about 1-2 days to fix).');
+    }
+  });
+</script>
   
   <p class="motw-text">If you do not remember the password, DM <a href="https://discord.com/users/1188903657102659705" target="_blank" style="color: inherit; text-decoration: underline;">me</a> on Discord, or ask me for the password at school.</p>
 </body>
