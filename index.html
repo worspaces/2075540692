@@ -26,6 +26,16 @@
       margin-top: 20px;
       text-align: center;
     }
+    /* Target eye icon inside the counterapi div */
+  .counterapi .icon-eye {
+    color: limegreen !important; /* for font-based icons */
+    fill: limegreen !important;  /* for SVGs */
+  }
+
+  /* In case it uses <svg> without a class */
+  .counterapi svg {
+    fill: limegreen !important;
+  }
     .motw-text a {
       color: #55CC25;
       font-size: 2rem;
@@ -68,6 +78,17 @@
     <input type="password" id="answer" name="answer" required autocomplete="off">
     <button type="submit">Check</button>
   </form>
+   <div class="counterapi"
+       key="login"
+       icon="eye"
+       label=""
+       startNumber="0"
+       abbreviate="true"
+       style="margin-top: 15px; min-height: 44px;">
+  </div>
+</div>
+
+<script src="https://counterapi.com/c.js" async></script>
 </div>
 
 <script>
