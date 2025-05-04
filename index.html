@@ -27,40 +27,9 @@
       text-align: center;
     }
 
-    /* Ensuring the counterapi div is positioned relative so we can position the black box over it */
-    .counterapi {
-      position: relative;
-      min-height: 44px;
-    }
-
   #myCounter {
     display: none;
   }
-
-    /* Black box overlay on top of the number */
-    .counterapi::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 50px;  /* Adjust based on the number size */
-      height: 100%;  /* Full height of the counter */
-      background-color: black;
-      z-index: 2;  /* Ensure it stays above the number */
-    }
-
-    /* Make the number invisible, while keeping the space */
-    .counterapi .count {
-      visibility: hidden !important; /* Hide the number */
-    }
-
-    /* Counter icon styling */
-    .counterapi .icon-eye,
-    .counterapi svg {
-      fill: limegreen !important; /* Ensure the icon stays green */
-    }
-
-    /* Additional Text Styling */
     .motw-text a {
       color: #55CC25;
       font-size: 2rem;
