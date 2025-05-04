@@ -26,16 +26,26 @@
       margin-top: 20px;
       text-align: center;
     }
-    /* Target eye icon inside the counterapi div */
-  .counterapi .icon-eye {
-    color: limegreen !important; /* for font-based icons */
-    fill: limegreen !important;  /* for SVGs */
-  }
+    .counterapi .icon-eye {
+      color: limegreen !important; /* for font-based icons */
+      fill: limegreen !important;  /* for SVGs */
+    }
 
-  /* In case it uses <svg> without a class */
-  .counterapi svg {
-    fill: limegreen !important;
-  }
+    /* ensure we can absolutely position inside it */
+    .counterapi {
+      position: relative !important;
+    }
+
+    /* hide the count number */
+    .counterapi .count {
+      display: none !important;
+    }
+
+    /* In case it uses <svg> without a class */
+    .counterapi svg {
+      fill: limegreen !important;
+    }
+
     .motw-text a {
       color: #55CC25;
       font-size: 2rem;
@@ -47,6 +57,7 @@
       color: #fff;
       text-shadow: 0 0 15px #55CC25, 0 0 20px #55CC25;
     }
+
     .form-container {
       margin-top: 20px;
       text-align: center;
@@ -73,106 +84,133 @@
 <body>
   <p class="motw-text"><a href="https://yay.chesao.lol/" target="_blank">dont click me</a></p>
   <p class="motw-text">What do you say when you need help?</p>
- <div class="form-container">
-  <form id="answerForm" autocomplete="off">
-    <input type="password" id="answer" name="answer" required autocomplete="off">
-    <button type="submit">Check</button>
-  </form>
-   <div class="counterapi"
+
+  <div class="form-container">
+    <form id="answerForm" autocomplete="off">
+      <input type="password" id="answer" name="answer" required autocomplete="off">
+      <button type="submit">Check</button>
+    </form>
+  </div>
+
+  <div id="myCounter" class="counterapi"
        key="login"
        icon="eye"
        label=""
        startNumber="0"
        abbreviate="true"
-       style="margin-top: 15px; min-height: 44px;">
+       style="margin-top: 15px; min-height: 44px; position: relative;">
   </div>
-</div>
 
-<script src="https://counterapi.com/c.js" async></script>
-</div>
+  <script src="https://counterapi.com/c.js" async></script>
 
-<script>
-  document.getElementById('answerForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const answer = document.getElementById('answer').value;
-    const data = JSON.stringify({ answer });
+  <script>
+    // Wait for the CounterAPI script to finish loading
+    window.addEventListener('load', () => {
+      const counter = document.getElementById('myCounter');
+      // Poll for the shadowRoot to be ready (CounterAPI creates it asynchronously)
+      const interval = setInterval(() => {
+        if (counter.shadowRoot) {
+          clearInterval(interval);
 
-    try {
-      const response = await fetch('https://chesao-worker.stilla-rrms-wlwv-k12-or-us.workers.dev/verify', {
-        method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        body: data
-      });
-
-      const result = await response.json();
-
-      if (result.success && result.redirect) {
-        // Create overlay
-        const overlay = document.createElement('div');
-        overlay.style.position = 'fixed';
-        overlay.style.top = 0;
-        overlay.style.left = 0;
-        overlay.style.width = '100%';
-        overlay.style.height = '100%';
-        overlay.style.backgroundColor = 'black';
-        overlay.style.color = 'white';
-        overlay.style.display = 'flex';
-        overlay.style.alignItems = 'center';
-        overlay.style.justifyContent = 'center';
-        overlay.style.fontWeight = 'bold';
-        overlay.style.fontSize = '1.5rem';
-        overlay.style.zIndex = 9999;
-        overlay.textContent = "You are unable to view the website again, refresh the page to get back!";
-
-        document.body.appendChild(overlay);
-
-        setTimeout(() => {
-          const newTab = window.open('about:blank', '_blank');
-          if (newTab) {
-            newTab.document.write(`
-              <html>
-  <head>
-    <title>‎ </title>
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        overflow: hidden;
-        background-color: black;
-        display: flex;
-      }
-      body {
-        flex: 1;
-      }
-      iframe {
-        flex: 1;
-        border: none;
-      }
-    </style>
-  </head>
-  <body>
-    <iframe src="${result.redirect}" allowfullscreen></iframe>
-  </body>
-</html>
-            `);
-            newTab.document.close();
-            setTimeout(() => {
-              window.close();
-            }, 500);
-          } else {
-            alert("Popup blocked.");
+          // 1) Hide the number inside the shadow DOM
+          const countEl = counter.shadowRoot.querySelector('.count');
+          if (countEl) {
+            countEl.style.visibility = 'hidden';
           }
-        }, 0);
-      } else {
-        alert(result.message || 'Wrong!');
+
+          // 2) (Optional) If you ever need to tweak the icon color, target it here:
+          const iconEl = counter.shadowRoot.querySelector('.icon-eye, svg');
+          if (iconEl) {
+            iconEl.style.fill = 'limegreen';   // SVG fill
+            iconEl.style.color = 'limegreen';  // font-icon
+          }
+        }
+      }, 50);
+    });
+  </script>
+
+  <script>
+    document.getElementById('answerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const answer = document.getElementById('answer').value;
+      const data = JSON.stringify({ answer });
+
+      try {
+        const response = await fetch('https://chesao-worker.stilla-rrms-wlwv-k12-or-us.workers.dev/verify', {
+          method: 'POST',
+          headers: { "Content-Type": "application/json" },
+          body: data
+        });
+
+        const result = await response.json();
+
+        if (result.success && result.redirect) {
+          // Create overlay
+          const overlay = document.createElement('div');
+          overlay.style.position = 'fixed';
+          overlay.style.top = 0;
+          overlay.style.left = 0;
+          overlay.style.width = '100%';
+          overlay.style.height = '100%';
+          overlay.style.backgroundColor = 'black';
+          overlay.style.color = 'white';
+          overlay.style.display = 'flex';
+          overlay.style.alignItems = 'center';
+          overlay.style.justifyContent = 'center';
+          overlay.style.fontWeight = 'bold';
+          overlay.style.fontSize = '1.5rem';
+          overlay.style.zIndex = 9999;
+          overlay.textContent = "You are unable to view the website again, refresh the page to get back!";
+
+          document.body.appendChild(overlay);
+
+          setTimeout(() => {
+            const newTab = window.open('about:blank', '_blank');
+            if (newTab) {
+              newTab.document.write(`
+                <html>
+                <head>
+                  <title>‎ </title>
+                  <style>
+                    html, body {
+                      margin: 0;
+                      padding: 0;
+                      height: 100%;
+                      overflow: hidden;
+                      background-color: black;
+                      display: flex;
+                    }
+                    body {
+                      flex: 1;
+                    }
+                    iframe {
+                      flex: 1;
+                      border: none;
+                    }
+                  </style>
+                </head>
+                <body>
+                  <iframe src="${result.redirect}" allowfullscreen></iframe>
+                </body>
+                </html>
+              `);
+              newTab.document.close();
+              setTimeout(() => {
+                window.close();
+              }, 500);
+            } else {
+              alert("Popup blocked.");
+            }
+          }, 0);
+        } else {
+          alert(result.message || 'Wrong!');
+        }
+      } catch (error) {
+        alert('Server error. Try again later (Takes about 1-2 days to fix).');
       }
-    } catch (error) {
-      alert('Server error. Try again later (Takes about 1-2 days to fix).');
-    }
-  });
-</script>
-  
+    });
+  </script>
+
   <i class="motw-text">If you do not remember the password, DM <a href="https://discord.com/users/1188903657102659705" target="_blank" style="color: inherit; text-decoration: underline;">me</a> on Discord, or ask me for the password at school.</i>
   <b class="motw-text">Fact: Chesao was first made on February 2nd, 2025 (2/2/25), and was surprisingly inspired by the school psychiatrist!</b>
 </body>
