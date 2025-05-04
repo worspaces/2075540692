@@ -26,26 +26,37 @@
       margin-top: 20px;
       text-align: center;
     }
-    .counterapi .icon-eye {
-      color: limegreen !important; /* for font-based icons */
-      fill: limegreen !important;  /* for SVGs */
-    }
 
-    /* ensure we can absolutely position inside it */
+    /* Ensuring the counterapi div is positioned relative so we can position the black box over it */
     .counterapi {
-      position: relative !important;
+      position: relative;
+      min-height: 44px;
     }
 
-    /* hide the count number */
+    /* Black box overlay on top of the number */
+    .counterapi::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 50px;  /* Adjust based on the number size */
+      height: 100%;  /* Full height of the counter */
+      background-color: black;
+      z-index: 2;  /* Ensure it stays above the number */
+    }
+
+    /* Make the number invisible, while keeping the space */
     .counterapi .count {
-      display: none !important;
+      visibility: hidden !important; /* Hide the number */
     }
 
-    /* In case it uses <svg> without a class */
+    /* Counter icon styling */
+    .counterapi .icon-eye,
     .counterapi svg {
-      fill: limegreen !important;
+      fill: limegreen !important; /* Ensure the icon stays green */
     }
 
+    /* Additional Text Styling */
     .motw-text a {
       color: #55CC25;
       font-size: 2rem;
@@ -98,36 +109,10 @@
        label=""
        startNumber="0"
        abbreviate="true"
-       style="margin-top: 15px; min-height: 44px; position: relative;">
+       style="margin-top: 15px; min-height: 44px;">
   </div>
 
   <script src="https://counterapi.com/c.js" async></script>
-
-  <script>
-    // Wait for the CounterAPI script to finish loading
-    window.addEventListener('load', () => {
-      const counter = document.getElementById('myCounter');
-      // Poll for the shadowRoot to be ready (CounterAPI creates it asynchronously)
-      const interval = setInterval(() => {
-        if (counter.shadowRoot) {
-          clearInterval(interval);
-
-          // 1) Hide the number inside the shadow DOM
-          const countEl = counter.shadowRoot.querySelector('.count');
-          if (countEl) {
-            countEl.style.visibility = 'hidden';
-          }
-
-          // 2) (Optional) If you ever need to tweak the icon color, target it here:
-          const iconEl = counter.shadowRoot.querySelector('.icon-eye, svg');
-          if (iconEl) {
-            iconEl.style.fill = 'limegreen';   // SVG fill
-            iconEl.style.color = 'limegreen';  // font-icon
-          }
-        }
-      }, 50);
-    });
-  </script>
 
   <script>
     document.getElementById('answerForm').addEventListener('submit', async (e) => {
@@ -159,7 +144,7 @@
           overlay.style.justifyContent = 'center';
           overlay.style.fontWeight = 'bold';
           overlay.style.fontSize = '1.5rem';
-          overlay.style.zIndex = 9999;
+          overlay.style.zIndex = 9999;  /* Ensure this is on top */
           overlay.textContent = "You are unable to view the website again, refresh the page to get back!";
 
           document.body.appendChild(overlay);
