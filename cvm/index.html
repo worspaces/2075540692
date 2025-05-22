@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Permissions-Policy" content="fullscreen=(self)">
+  <title>Home</title>
+  <style>
+    body, html {
+      margin: 0; height: 100%; width: 100%;
+      overflow-x: hidden; background: black;
+      font-family: Impact, sans-serif; color: white;
+      position: relative;
+    }
+    * { box-sizing: border-box; }
+
+    #hyperbeam-container {
+      width: 100%; height: calc(100vh - 50px);
+      border: 5px solid #427B2C;
+    }
+    #error-message {
+      color: #ff4444; text-align: center; padding: 20px;
+      display: none; font-weight: bold; font-size: 18px; margin-top: 10px;
+    }
+    #bottom-bar {
+      position: absolute; bottom: 0; width: 100%; height: 50px;
+      background: #427B2C; display: flex; align-items: center;
+      padding-left: 20px; box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
+    }
+    #timer { font-size: 30px; font-weight: bold; }
+    #fullscreen-btn { background: none; border: none; margin-left: 20px; cursor: pointer; }
+    #fullscreen-btn img { height: 40px; }
+    #fullscreen-timer {
+      position: fixed; top: 10px; left: 10px; z-index: 1001;
+      background: rgba(0,0,0,0.5); color: white;
+      padding: 5px 10px; border-radius: 5px; display: none; font-size: 24px;
+    }
+    #copyright-text {
+      margin-left: auto; margin-right: 20px;
+      font-size: 14px; user-select: none;
+    }
+
+    /* Overlays */
+    .overlay {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      display: none; justify-content: center; align-items: center;
+      z-index: 1000;
+    }
+    .overlay.active { display: flex; }
+    .overlay-content {
+      background: #222; padding: 40px; border-radius: 10px;
+      max-width: 90%; text-align: center; color: white;
+      box-shadow: 0 0 15px rgba(0,0,0,0.8);
+      font-size: 18px;
+    }
+    .overlay-content h2 {
+      margin-top: 0; font-size: 32px; color: #427B2C;
+    }
+    .overlay-content p { margin: 15px 0; line-height: 1.5; }
+    .overlay-content button {
+      margin: 10px 5px 0;
+      padding: 10px 20px; font-size: 18px;
+      border: none; border-radius: 5px;
+      cursor: pointer; font-family: Impact, sans-serif;
+      background: #427B2C; color: white;
+    }
+    .overlay-content button:disabled {
+      background: #2a4f1d; cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="description" content="version 1.1: chromium VM with 30-minute sessions, possible downtime during high load.">
+
+  <!-- Initial warning overlay -->
+  <div id="warning" class="overlay active">
+    <div class="overlay-content">
+      <h2>Thanks for using CVM!</h2>
+      <p>This app is in beta, and bugs may occur, if you found one, please email <b>broken-vm@craz.top</b>.</p>
+      <p>Alternative VM servers may be added if CVM receives a <b>ton</b> of users.</p>
+      <p>Each VM server (this is server one) can only have up to <b>ten</b> sessions at the same time before getting rate-limited, so you'll have to wait for an hour, sorry for the inconvenience, I haven't spent a single penny while making this app!</p>
+      <p style="color:#ff4444;font-weight:bold;text-decoration:underline;">
+        Warning: Do not use keybinds like <b>Ctrl+W</b> or <b>Ctrl+R</b> — they will end your session and you'll lose your progress.
+      </p>
+      <label><input type="checkbox" id="acknowledge-checkbox"> I understand.</label><br>
+      <button id="close-warning" disabled>Start session!</button><br>
+      <i style="font-size:14px;margin-top:10px;display:block;">Version: 1.1</i>
+    </div>
+  </div>
+
+  <!-- One-minute remaining overlay -->
+  <div id="minute-warning" class="overlay">
+    <div class="overlay-content">
+      <p><span style="font-size:48px;">⚠️</span> There is one minute left in your session, you might want to wrap things up before the timer runs out...</p>
+      <button id="minute-ok">OK</button>
+    </div>
+  </div>
+
+  <!-- Black-screen notification (5s after start) -->
+  <div id="black-notif" class="overlay">
+    <div class="overlay-content">
+      <p>See only a black screen?</p>
+      <button id="notif-yes">Yes, why?</button>
+      <button id="notif-no">No, go away.</button>
+    </div>
+  </div>
+
+  <!-- Custom alert after “Yes” -->
+<div id="black-alert" class="overlay">
+  <div class="overlay-content" style="display: flex; align-items: flex-start; gap: 15px;">
+    <div style="font-size: 48px; line-height: 1;">💀</div>
+    <div>
+      <p>If you just see a black screen for more than 5 seconds, it’s either:<br>
+         1. Hyperbeam was rate-limited<br>
+         2. The school has blocked the frame that the VM runs in<br>
+         3. We are currently on downtime.</p>
+      <p> </p>
+      <p>Check back in 60 minutes to 24 hours, and if the issue persists, consider emailing <b>broken-vm@craz.top</b></p>
+      <button id="black-ok">OK</button>
+    </div>
+  </div>
+</div>
+
+  <!-- VM container & error message -->
+  <div id="hyperbeam-container"></div>
+  <div id="error-message"></div>
+
+  <!-- Bottom bar -->
+  <div id="bottom-bar">
+    <span id="timer">30:00</span>
+    <button id="fullscreen-btn"><img src="https://raw.githubusercontent.com/worspaces/CVM/refs/heads/main/img/fullscreen.png" alt="..."></button>
+    <span id="copyright-text">2025 © WZ LLC, VM by Hyperbeam.</span>
+  </div>
+  <span id="fullscreen-timer">30:00</span>
+
+  <script type="module">
+    import Hyperbeam from "https://unpkg.com/@hyperbeam/web@latest/dist/index.js";
+
+    let minuteAlertShown = false;
+
+    async function start() {
+      // 5-second black-screen notification
+      setTimeout(() => {
+        document.getElementById('black-notif').classList.add('active');
+      }, 5000);
+
+      try {
+        const res = await fetch("https://hyperbeam.stilla-rrms-wlwv-k12-or-us.workers.dev/", { method: "POST" });
+        const { embed_url } = await res.json();
+        await Hyperbeam(document.getElementById("hyperbeam-container"), embed_url, {
+          iframeAttributes: { allow: "fullscreen" }
+        });
+      } catch {
+        const e = document.getElementById('error-message');
+        e.style.display = 'block';
+        e.textContent = "Too many users are using CVM right now, try again in 60 minutes - 24 hours.";
+      }
+    }
+
+    // Initial warning logic
+    document.getElementById('acknowledge-checkbox').addEventListener('change', e => {
+      document.getElementById('close-warning').disabled = !e.target.checked;
+    });
+    document.getElementById('close-warning').addEventListener('click', () => {
+      document.getElementById('warning').classList.remove('active');
+      start();
+      startTimer();
+    });
+
+    // One-minute warning
+    document.getElementById('minute-ok').addEventListener('click', () => {
+      document.getElementById('minute-warning').classList.remove('active');
+    });
+
+    // Black-screen notif buttons
+    document.getElementById('notif-no').addEventListener('click', () => {
+      document.getElementById('black-notif').classList.remove('active');
+    });
+    document.getElementById('notif-yes').addEventListener('click', () => {
+      document.getElementById('black-notif').classList.remove('active');
+      document.getElementById('black-alert').classList.add('active');
+    });
+
+    // Black-screen alert OK
+    document.getElementById('black-ok').addEventListener('click', () => {
+      window.location.href = 'https://chesao.lol/cvm/';
+    });
+
+    // Fullscreen change
+    document.getElementById('fullscreen-btn').addEventListener('click', async () => {
+      if (document.documentElement.requestFullscreen) {
+        await document.documentElement.requestFullscreen();
+        document.getElementById('fullscreen-timer').style.display = 'block';
+      }
+    });
+
+    // Countdown timer + one-minute pop
+    function startTimer() {
+      let t = 1800;
+      const iv = setInterval(() => {
+        if (t > 0) {
+          t--;
+          const m = Math.floor(t/60), s = t%60;
+          document.getElementById('timer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+          document.getElementById('fullscreen-timer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+          if (t === 60 && !minuteAlertShown) {
+            minuteAlertShown = true;
+            document.getElementById('minute-warning').classList.add('active');
+          }
+        } else {
+          clearInterval(iv);
+          window.location.href = 'https://wilburz.com/';
+        }
+      }, 1000);
+    }
+
+    // Prevent accidental close
+    window.addEventListener('beforeunload', e => { e.preventDefault(); e.returnValue = ''; });
+  </script>
+</body>
+</html>
